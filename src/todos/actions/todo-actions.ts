@@ -32,11 +32,11 @@ export const toggleTodo = async(id: string, complete:boolean): Promise<Todo> => 
     return updatedTodo
 }
 
-export const addTodo = async (description:string )=>{
+export const addTodo = async (description:string, userId: string )=>{
 
     try {
 
-        const todo = await prisma.todo.create({ data: { description } });
+        const todo = await prisma.todo.create({ data: { description, userId } });
         revalidatePath('/dashboard/server-todos');
 
         return todo;
@@ -47,9 +47,9 @@ export const addTodo = async (description:string )=>{
 }
 
 
-export const deleteCompleted = async ():Promise<void> => {
-
-    await prisma.todo.deleteMany({ where: { complete: true } });
+export const deleteCompleted = async (userId: string):Promise<void> => {
+    
+    await prisma.todo.deleteMany({ where: { userId: userId, complete: true } });
     revalidatePath('/dashboard/server-todos');
 
    
